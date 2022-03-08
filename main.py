@@ -260,7 +260,7 @@ def train_loop(args, labeled_loader, unlabeled_loader, test_loader, finetune_dat
         pbar.update()
         if args.local_rank in [-1, 0]:
             args.writer.add_scalar("lr", get_lr(s_optimizer), step)
-            wandb.log({"lr": get_lr(s_optimizer)})
+#             wandb.log({"lr": get_lr(s_optimizer)})
 
         args.num_eval = step // args.eval_step
         if (step + 1) % args.eval_step == 0:
@@ -272,12 +272,12 @@ def train_loop(args, labeled_loader, unlabeled_loader, test_loader, finetune_dat
                 args.writer.add_scalar("train/4.t_unlabeled", t_losses_u.avg, args.num_eval)
                 args.writer.add_scalar("train/5.t_mpl", t_losses_mpl.avg, args.num_eval)
                 args.writer.add_scalar("train/6.mask", mean_mask.avg, args.num_eval)
-                wandb.log({"train/1.s_loss": s_losses.avg,
-                           "train/2.t_loss": t_losses.avg,
-                           "train/3.t_labeled": t_losses_l.avg,
-                           "train/4.t_unlabeled": t_losses_u.avg,
-                           "train/5.t_mpl": t_losses_mpl.avg,
-                           "train/6.mask": mean_mask.avg})
+#                 wandb.log({"train/1.s_loss": s_losses.avg,
+#                            "train/2.t_loss": t_losses.avg,
+#                            "train/3.t_labeled": t_losses_l.avg,
+#                            "train/4.t_unlabeled": t_losses_u.avg,
+#                            "train/5.t_mpl": t_losses_mpl.avg,
+#                            "train/6.mask": mean_mask.avg})
 
                 test_model = avg_student_model if avg_student_model is not None else student_model
                 test_loss, top1, top5 = evaluate(args, test_loader, test_model, criterion)
@@ -285,9 +285,9 @@ def train_loop(args, labeled_loader, unlabeled_loader, test_loader, finetune_dat
                 args.writer.add_scalar("test/loss", test_loss, args.num_eval)
                 args.writer.add_scalar("test/acc@1", top1, args.num_eval)
                 args.writer.add_scalar("test/acc@5", top5, args.num_eval)
-                wandb.log({"test/loss": test_loss,
-                           "test/acc@1": top1,
-                           "test/acc@5": top5})
+#                 wandb.log({"test/loss": test_loss,
+#                            "test/acc@1": top1,
+#                            "test/acc@5": top5})
 
                 is_best = top1 > args.best_top1
                 if is_best:
@@ -314,7 +314,7 @@ def train_loop(args, labeled_loader, unlabeled_loader, test_loader, finetune_dat
 
     if args.local_rank in [-1, 0]:
         args.writer.add_scalar("result/test_acc@1", args.best_top1)
-        wandb.log({"result/test_acc@1": args.best_top1})
+#         wandb.log({"result/test_acc@1": args.best_top1})
 
     # finetune
     del t_scaler, t_scheduler, t_optimizer, teacher_model, labeled_loader, unlabeled_loader
@@ -421,10 +421,10 @@ def finetune(args, finetune_dataset, test_loader, model, criterion):
             args.writer.add_scalar("finetune/test_loss", test_loss, epoch)
             args.writer.add_scalar("finetune/acc@1", top1, epoch)
             args.writer.add_scalar("finetune/acc@5", top5, epoch)
-            wandb.log({"finetune/train_loss": losses.avg,
-                       "finetune/test_loss": test_loss,
-                       "finetune/acc@1": top1,
-                       "finetune/acc@5": top5})
+#             wandb.log({"finetune/train_loss": losses.avg,
+#                        "finetune/test_loss": test_loss,
+#                        "finetune/acc@1": top1,
+#                        "finetune/acc@5": top5})
 
             is_best = top1 > args.best_top1
             if is_best:
@@ -444,7 +444,7 @@ def finetune(args, finetune_dataset, test_loader, model, criterion):
             }, is_best, finetune=True)
         if args.local_rank in [-1, 0]:
             args.writer.add_scalar("result/finetune_acc@1", args.best_top1)
-            wandb.log({"result/finetune_acc@1": args.best_top1})
+#             wandb.log({"result/finetune_acc@1": args.best_top1})
     return
 
 
