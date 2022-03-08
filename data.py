@@ -8,7 +8,7 @@ from torchvision import transforms
 from torchvision.transforms import InterpolationMode
 
 from augmentation import RandAugmentCIFAR
-from augment import TrivialAugmentWide
+# from augment import TrivialAugmentWide
 
 logger = logging.getLogger(__name__)
 
