@@ -47,8 +47,8 @@ def Cutout(img, v, max_v, **kwarg):
     w, h = img.size
     x0 = np.random.uniform(0, w)
     y0 = np.random.uniform(0, h)
-    x0 = int(max(0, x0 - v / 2.))
-    y0 = int(max(0, y0 - v / 2.))
+    x0 = int(max(0, x0 - v / 2.0))
+    y0 = int(max(0, y0 - v / 2.0))
     x1 = int(min(w, x0 + v))
     y1 = int(min(h, y0 + v))
     xy = (x0, y0, x1, y1)
@@ -64,8 +64,8 @@ def CutoutConst(img, v, max_v, **kwarg):
     w, h = img.size
     x0 = np.random.uniform(0, w)
     y0 = np.random.uniform(0, h)
-    x0 = int(max(0, x0 - v / 2.))
-    y0 = int(max(0, y0 - v / 2.))
+    x0 = int(max(0, x0 - v / 2.0))
+    y0 = int(max(0, y0 - v / 2.0))
     x1 = int(min(w, x0 + v))
     y1 = int(min(h, y0 + v))
     xy = (x0, y0, x1, y1)
@@ -109,14 +109,26 @@ def ShearX(img, v, max_v, **kwarg):
     v = _float_parameter(v, max_v)
     if random.random() < 0.5:
         v = -v
-    return img.transform(img.size, PIL.Image.AFFINE, (1, v, 0, 0, 1, 0), RESAMPLE_MODE, fillcolor=FILL_COLOR)
+    return img.transform(
+        img.size,
+        PIL.Image.AFFINE,
+        (1, v, 0, 0, 1, 0),
+        RESAMPLE_MODE,
+        fillcolor=FILL_COLOR,
+    )
 
 
 def ShearY(img, v, max_v, **kwarg):
     v = _float_parameter(v, max_v)
     if random.random() < 0.5:
         v = -v
-    return img.transform(img.size, PIL.Image.AFFINE, (1, 0, 0, v, 1, 0), RESAMPLE_MODE, fillcolor=FILL_COLOR)
+    return img.transform(
+        img.size,
+        PIL.Image.AFFINE,
+        (1, 0, 0, v, 1, 0),
+        RESAMPLE_MODE,
+        fillcolor=FILL_COLOR,
+    )
 
 
 def Solarize(img, v, max_v, **kwarg):
@@ -139,7 +151,13 @@ def TranslateX(img, v, max_v, **kwarg):
     if random.random() < 0.5:
         v = -v
     v = int(v * img.size[0])
-    return img.transform(img.size, PIL.Image.AFFINE, (1, 0, v, 0, 1, 0), RESAMPLE_MODE, fillcolor=FILL_COLOR)
+    return img.transform(
+        img.size,
+        PIL.Image.AFFINE,
+        (1, 0, v, 0, 1, 0),
+        RESAMPLE_MODE,
+        fillcolor=FILL_COLOR,
+    )
 
 
 def TranslateY(img, v, max_v, **kwarg):
@@ -147,21 +165,39 @@ def TranslateY(img, v, max_v, **kwarg):
     if random.random() < 0.5:
         v = -v
     v = int(v * img.size[1])
-    return img.transform(img.size, PIL.Image.AFFINE, (1, 0, 0, 0, 1, v), RESAMPLE_MODE, fillcolor=FILL_COLOR)
+    return img.transform(
+        img.size,
+        PIL.Image.AFFINE,
+        (1, 0, 0, 0, 1, v),
+        RESAMPLE_MODE,
+        fillcolor=FILL_COLOR,
+    )
 
 
 def TranslateXConst(img, v, max_v, **kwarg):
     v = _float_parameter(v, max_v)
     if random.random() < 0.5:
         v = -v
-    return img.transform(img.size, PIL.Image.AFFINE, (1, 0, v, 0, 1, 0), RESAMPLE_MODE, fillcolor=FILL_COLOR)
+    return img.transform(
+        img.size,
+        PIL.Image.AFFINE,
+        (1, 0, v, 0, 1, 0),
+        RESAMPLE_MODE,
+        fillcolor=FILL_COLOR,
+    )
 
 
 def TranslateYConst(img, v, max_v, **kwarg):
     v = _float_parameter(v, max_v)
     if random.random() < 0.5:
         v = -v
-    return img.transform(img.size, PIL.Image.AFFINE, (1, 0, 0, 0, 1, v), RESAMPLE_MODE, fillcolor=FILL_COLOR)
+    return img.transform(
+        img.size,
+        PIL.Image.AFFINE,
+        (1, 0, 0, 0, 1, v),
+        RESAMPLE_MODE,
+        fillcolor=FILL_COLOR,
+    )
 
 
 def _float_parameter(v, max_v):
@@ -214,7 +250,7 @@ def fixmatch_augment_pool():
         (ShearY, 0.3, 0),
         (Solarize, 256, None),
         (TranslateX, 0.3, 0),
-        (TranslateY, 0.3, 0)
+        (TranslateY, 0.3, 0),
     ]
     return augs
 
@@ -243,14 +279,15 @@ def cifar_augment_pool():
 
 def soft_augment_pool():
     # Test
-    augs = [(AutoContrast, None, None),
-            (Brightness, 1.8, 0.1),
-            (Color, 1.8, 0.1),
-            (Contrast, 1.8, 0.1),
-            (CutoutConst, 40, None),
-            (Posterize, 4, 0),
-            (Sharpness, 1.8, 0.1),
-            ]
+    augs = [
+        (AutoContrast, None, None),
+        (Brightness, 1.8, 0.1),
+        (Color, 1.8, 0.1),
+        (Contrast, 1.8, 0.1),
+        (CutoutConst, 40, None),
+        (Posterize, 4, 0),
+        (Sharpness, 1.8, 0.1),
+    ]
     return augs
 
 

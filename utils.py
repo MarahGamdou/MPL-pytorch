@@ -21,7 +21,7 @@ def reduce_tensor(tensor, n):
 def create_loss_fn(args):
     # if args.label_smoothing > 0:
     #     criterion = SmoothCrossEntropyV2(alpha=args.label_smoothing)
-    # else:  
+    # else:
     criterion = nn.CrossEntropyLoss(label_smoothing=args.label_smoothing)
     return criterion.to(args.device)
 
@@ -36,7 +36,7 @@ def module_load_state_dict(model, state_dict):
     except:
         new_state_dict = OrderedDict()
         for k, v in state_dict.items():
-            name = f'module.{k}'  # add `module.`
+            name = f"module.{k}"  # add `module.`
             new_state_dict[name] = v
         model.load_state_dict(new_state_dict)
 
@@ -51,18 +51,18 @@ def model_load_state_dict(model, state_dict):
 def save_checkpoint(args, state, is_best, finetune=False):
     os.makedirs(args.save_path, exist_ok=True)
     if finetune:
-        name = f'{args.name}_finetune'
+        name = f"{args.name}_finetune"
     else:
         name = args.name
-    filename = f'{args.save_path}/{name}_last.pth.tar'
+    filename = f"{args.save_path}/{name}_last.pth.tar"
     torch.save(state, filename, _use_new_zipfile_serialization=False)
     if is_best:
-        shutil.copyfile(filename, f'{args.save_path}/{args.name}_best.pth.tar')
+        shutil.copyfile(filename, f"{args.save_path}/{args.name}_best.pth.tar")
 
 
 def accuracy(output, target, topk=(1,)):
-    output = output.to(torch.device('cpu'))
-    target = target.to(torch.device('cpu'))
+    output = output.to(torch.device("cpu"))
+    target = target.to(torch.device("cpu"))
     maxk = max(topk)
     batch_size = target.shape[0]
 
@@ -88,9 +88,13 @@ class SmoothCrossEntropy(nn.Module):
         else:
             num_classes = logits.shape[-1]
             alpha_div_k = self.alpha / num_classes
-            target_probs = F.one_hot(labels, num_classes=num_classes).float() * \
-                (1. - self.alpha) + alpha_div_k
-            loss = (-(target_probs * torch.log_softmax(logits, dim=-1)).sum(dim=-1)).mean()
+            target_probs = (
+                F.one_hot(labels, num_classes=num_classes).float() * (1.0 - self.alpha)
+                + alpha_div_k
+            )
+            loss = (
+                -(target_probs * torch.log_softmax(logits, dim=-1)).sum(dim=-1)
+            ).mean()
         return loss
 
 
@@ -107,7 +111,7 @@ class SmoothCrossEntropyV2(nn.Module):
         super().__init__()
         assert label_smoothing < 1.0
         self.smoothing = label_smoothing
-        self.confidence = 1. - label_smoothing
+        self.confidence = 1.0 - label_smoothing
 
     def forward(self, x, target):
         if self.smoothing == 0:
@@ -123,7 +127,7 @@ class SmoothCrossEntropyV2(nn.Module):
 
 class AverageMeter(object):
     """Computes and stores the average and current value
-       Imported from https://github.com/pytorch/examples/blob/master/imagenet/main.py#L247-L262
+    Imported from https://github.com/pytorch/examples/blob/master/imagenet/main.py#L247-L262
     """
 
     def __init__(self):
